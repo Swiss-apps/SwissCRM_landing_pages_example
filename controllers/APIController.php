@@ -8,7 +8,7 @@ class APIController{
         $reqData = array(
             'aff_id' => $affId,
             'campaign_id' => $this->CFG['campaignId'],
-            'ip_address' => "127.0.0.1",
+            'ip_address' => $_SERVER['REMOTE_ADDR'],
             'geo_state' => "IT",
             'geo_country' => "IT",
             'device' => $_SERVER['HTTP_USER_AGENT'],
