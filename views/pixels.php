@@ -1,0 +1,3 @@
+<?php echo $pageViewPixel ?? ''; ?>
+
+<?php echo $affiliatePixel ?? ''; ?>

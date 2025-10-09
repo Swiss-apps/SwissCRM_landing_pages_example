@@ -1,6 +1,6 @@
 <?php
 class APIController{
-    protected $CFG;
+    protected array $CFG;
     function __construct($config){
         $this->CFG = $config;
     }
@@ -147,9 +147,19 @@ class APIController{
         if ($status !== "200") {
             header('Location: /Error');
         }
-
+        if($this->CFG['enableAPILogging']) $this->logRequest($data, $result, $url);
 
         return  json_decode( $result );
+    }
+
+    protected function logRequest($request, $response, $url){
+        $request = json_encode($request, JSON_PRETTY_PRINT);
+        $response = json_encode(json_decode($response, true), JSON_PRETTY_PRINT);
+
+        $stringToSave = '['.date('Y-m-d H:i:s').'] Request: '.$url.PHP_EOL.
+            $request.PHP_EOL.
+            '['.date('Y-m-d H:i:s').'] Response: '.$url.PHP_EOL.$response.PHP_EOL;
+        file_put_contents('logs/api_log.log', $stringToSave,  FILE_APPEND);
     }
 
 }
