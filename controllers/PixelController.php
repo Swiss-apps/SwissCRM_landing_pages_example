@@ -54,10 +54,14 @@ class PixelController {
     }
 
     public function renderAffiliatePixel(&$pixelToRender, $response_key){
-        $responsePixels = $_SESSION[$response_key]->data->attributes->pixel_events_data;
+        $responsePixels = $_SESSION[$response_key]->pixel_events_data;
         foreach ($responsePixels as $responsePixel) {
-            if ($responsePixel['pixel_variant'] == 'partial' && $responsePixel['pixel_type'] == 'javascript') {
-                $pixelToRender = $responsePixel['pixel_value'];
+
+//            echo '<pre>';
+//            print_r($responsePixel);
+//            exit;
+            if ($responsePixel->pixel_variant == 'partial' && $responsePixel->pixel_type == 'javascript' || $responsePixel->pixel_type == 'iframe') {
+                $pixelToRender = $responsePixel->pixel_content;
             }
         }
     }

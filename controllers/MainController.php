@@ -29,7 +29,9 @@ class MainController
     }
     public function actionPayment(){
         $pageViewPixel = '';
+        $affiliatePixel = '';
         $this->PixelController->renderPageViewPixel($pageViewPixel, 'checkout_page');
+        $this->PixelController->renderAffiliatePixel($affiliatePixel, 'lead');
 
         include dirname(__DIR__) . '/views/payment.php';
         include dirname(__DIR__) . '/views/pixels.php';
