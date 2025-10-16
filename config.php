@@ -1,10 +1,10 @@
 <?php
 $config = array(
-    'API_BASE_URL' => 'https://crm2.staging-api.swisspriv.com/api/v1/storefront',
-    'API_KEY' => '-_WOfr5eQRiDJG5WyV8l_xoXmUgGhOqiGePAoSnftTc=',
-    'productId' => 1,
-    'campaignId' => 1,
+    'API_BASE_URL' => 'https://dashboard-api.swisscrm.com/api/v1/storefront',
+    'API_KEY' => 'GgLolWA69UDLdB4k1vUHpOYFPsajtGcCewNfW_O1MIg=',
+    'productId' => 2170,
+    'campaignId' => 409,
     'upsellProductId' => 3,
-    'hasUpsellEnabled' => true,
+    'hasUpsellEnabled' => false,
     'enableAPILogging' => false,
 );
