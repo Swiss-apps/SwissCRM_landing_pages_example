@@ -124,31 +124,42 @@ class APIController{
         $_SESSION['confirmed_order'] = $response->data->attributes;
         $_SESSION['confirmed_order'] = $response->data->attributes;
     }
-    protected function buildAndSendPostRequest($endpoint, $data){
-        $url = $this->CFG['API_BASE_URL'].$endpoint;
-        $options = array(
-            'http' => array(
-                'method'  => 'POST',
-                'content' => json_encode( $data ),
-                'header'=>  "Content-Type: application/json\r\n" .
-                    "Accept: application/json\r\n".
-                    "Authorization:".$this->CFG['API_KEY']."\r\n"
-            )
-        );
+    protected function buildAndSendPostRequest($endpoint, $data) {
+        $url = $this->CFG['API_BASE_URL'] . $endpoint;
+        $jsonData = json_encode($data);
 
-        $context  = stream_context_create( $options );
-        $result = @file_get_contents( $url, false, $context );
-        $status_line = $http_response_header[0];
+        $ch = curl_init($url);
 
-        preg_match('{HTTP\/\S*\s(\d{3})}', $status_line, $match);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as string
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Authorization: ' . $this->CFG['API_KEY']
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 
-        $status = $match[1];
-        if($this->CFG['enableAPILogging']) $this->logRequest($data, $result, $url);
-        if ($status !== "200") {
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($this->CFG['enableAPILogging']) {
+            $this->logRequest($data, $response, $url);
+        }
+
+        if (curl_errno($ch)) {
+            // If cURL error occurs
+            $error = curl_error($ch);
+            curl_close($ch);
+            die("cURL Error: $error");
+        }
+
+        curl_close($ch);
+
+        if ($httpCode !== 200) {
             header('Location: /Error');
         }
 
-        return  json_decode( $result );
+        return json_decode($response);
     }
 
     protected function logRequest($request, $response, $url){
