@@ -9,8 +9,8 @@ class APIController{
             'aff_id' => $affId,
             'campaign_id' => $this->CFG['campaignId'],
             'ip_address' => $_SERVER['REMOTE_ADDR'],
-            'geo_state' => "IT",
-            'geo_country' => "IT",
+            'geo_state' => "NY",
+            'geo_country' => "US",
             'device' => $_SERVER['HTTP_USER_AGENT'],
         );
         $response = $this->buildAndSendPostRequest('/clicks', $reqData);
@@ -29,11 +29,11 @@ class APIController{
                 "ship_address2" => "",
                 "ship_city" => $_REQUEST['fields_city'],
                 "ship_state" => $_REQUEST['fields_state'],
-                "ship_country" => "IT",
+                "ship_country" => "US",
                 "ship_postal_code" => $_REQUEST['fields_zip'],
-                "locale" => "it-IT",
+                "locale" => "us-US",
                 "send_partial_pixels" => true,
-                "has_upsell" => true,
+                "has_upsell" => $this->CFG['hasUpsellEnabled'],
                 "additional_details" => array()
               )
         );
@@ -143,11 +143,10 @@ class APIController{
         preg_match('{HTTP\/\S*\s(\d{3})}', $status_line, $match);
 
         $status = $match[1];
-
+        if($this->CFG['enableAPILogging']) $this->logRequest($data, $result, $url);
         if ($status !== "200") {
             header('Location: /Error');
         }
-        if($this->CFG['enableAPILogging']) $this->logRequest($data, $result, $url);
 
         return  json_decode( $result );
     }

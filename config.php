@@ -6,5 +6,5 @@ $config = array(
     'campaignId' => 409,
     'upsellProductId' => 3,
     'hasUpsellEnabled' => false,
-    'enableAPILogging' => false,
+    'enableAPILogging' => true,
 );
