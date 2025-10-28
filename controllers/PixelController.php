@@ -44,13 +44,16 @@ class PixelController {
     }
 
     public function renderPageViewPixel(&$pixelToRender, $page){
-        foreach ($_SESSION['pageViewPixels'] as $pixel) {
-            if($pixel['page'] ==  $page){
-                if($pixel['pixel_type'] == 'javascript'){
-                    $pixelToRender = $pixel['pixel_value'];
+        if (@$_SESSION['pageViewPixels'] != null){
+            foreach (@$_SESSION['pageViewPixels'] as $pixel) {
+                if ($pixel['page'] == $page) {
+                    if ($pixel['pixel_type'] == 'javascript') {
+                        $pixelToRender = $pixel['pixel_value'];
+                    }
                 }
             }
         }
+
     }
 
     public function renderAffiliatePixel(&$pixelToRender, $response_key){
