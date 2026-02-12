@@ -19,7 +19,7 @@ class APIController{
     public function triggerLead(){
         $reqData = array(
             "session_token" => $_SESSION['session_token'],
-              "lead" => array(
+            "lead" => array(
                 "first_name" => $_REQUEST['fields_fname'],
                 "last_name" => $_REQUEST['fields_lname'],
                 "email" => $_REQUEST['fields_email'],
@@ -35,34 +35,33 @@ class APIController{
                 "send_partial_pixels" => true,
                 "has_upsell" => $this->CFG['hasUpsellEnabled'],
                 "additional_details" => array()
-              )
+            )
         );
 
         $response = $this->buildAndSendPostRequest('/leads', $reqData);
         $_SESSION['lead'] = $response->data->attributes;
     }
     public function triggerCheckout(){
+
+
+
         $reqData = array(
             "session_token" => $_SESSION['session_token'],
             "order" => array(
                 "cc_risk_data" => "",
                 "payment_source_attributes" => array(
-                    "card" => array(
-                        "month" => $_REQUEST['cc_expmonth'],
-                        "year" =>  $_REQUEST['cc_expyear'],
-                        "number" => preg_replace(':[\s!"#$%&\'()*+,-./\\\~]:', '', $_REQUEST['credit_card']),
-                        "cvv" => $_REQUEST['cc_cvv'],
-                        "name" => $_REQUEST['fields_fname']." ".$_REQUEST['fields_lname'],
-                    ),
+                    "gateway_id" => 12,
+                    "payment_method_type" => "applepay",
+                    "token" => $_POST['payment_token'],
                     "redirect_links" => array(
-                        "success_url" => "https://google.com/"
+                        "success_url" => "https://google.com/",
+                        "failure_url" => "https://apple.com/"
                     ),
-                    "hosted" => false
+                    "hosted" => true,
+                    "radar_session_id" => ""
                 ),
                 "use_shipping_address" => true,
-                "campaign_product_ids" => array(
-                    $this->CFG['productId']
-                )
+                "campaign_product_ids" => array($this->CFG['productId'])
             ),
             "pixel_data" => array(
                 array(
@@ -170,6 +169,8 @@ class APIController{
             $request.PHP_EOL.
             '['.date('Y-m-d H:i:s').'] Response: '.$url.PHP_EOL.$response.PHP_EOL;
         file_put_contents('logs/api_log.log', $stringToSave,  FILE_APPEND);
+        $logFile = 'logs/api_log.log';
+
     }
 
 }
